@@ -1,7 +1,7 @@
-import { type Plugin, type PluginInput, tool } from '@opencode-ai/plugin'
+import { type Plugin, tool } from "@opencode-ai/plugin"
 import { pdf } from 'pdf-to-img'
-import * as fs from 'fs/promises'
-import * as path from 'path'
+import fs from 'fs/promises'
+import path from 'path'
 
 export async function convertPdfToImages(
   pdfPath: string,
@@ -76,7 +76,7 @@ export async function convertPdfToImages(
   return manifestContent
 }
 
-export const opencodeToolPdf2img: Plugin = async (_ctx: PluginInput) => {
+export const Pdf2imgPlugin: Plugin = async (_ctx) => {
   return {
     tool: {
       pdf2img: tool({
@@ -91,9 +91,9 @@ export const opencodeToolPdf2img: Plugin = async (_ctx: PluginInput) => {
             args.pdfPath,
             context.directory,
             args.scale ?? 4.0,
-          )
+          );
         },
       }),
     },
-  }
-}
+  };
+};
