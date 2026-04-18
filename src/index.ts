@@ -8,12 +8,12 @@ export async function convertPdfToImages(
   outputDir: string,
   scale: number = 4.0
 ): Promise<string> {
-  if (!pdfPath || typeof pdfPath !== 'string') {
-    throw new Error('Invalid PDF path: path cannot be empty')
+  if (!pdfPath || typeof pdfPath !== 'string' || pdfPath.trim() === '') {
+    return 'Error: No PDF file specified. Please provide a path to a PDF file using the pdfPath parameter.'
   }
 
   if (pdfPath.includes('\0')) {
-    throw new Error('Invalid PDF path: contains null character')
+    return 'Error: Invalid PDF path contains null character. Please provide a valid file path.'
   }
 
   const absoluteOutputDir = path.resolve(outputDir)
