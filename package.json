@@ -1,6 +1,6 @@
 {
   "name": "opencode-tool-pdf2img",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "PDF to image conversion tool for OpenCode",
   "type": "module",
   "main": "./dist/index.js",
@@ -9,6 +9,8 @@
   },
   "files": [
     "dist",
+    "scripts",
+    "tools",
     "README.md",
     "LICENSE"
   ],
@@ -35,7 +37,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "node ./scripts/install-tool.js"
   },
   "publishConfig": {
     "access": "public"

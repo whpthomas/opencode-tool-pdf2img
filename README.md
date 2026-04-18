@@ -4,15 +4,33 @@ Custom tool for OpenCode that converts PDF files into images (one image per page
 
 ## Installation
 
-Add to your `opencode.json`:
+### Option 1: Project-level (recommended)
+
+Add to your project's `.opencode/package.json`:
 
 ```json
 {
-  "plugin": ["opencode-tool-pdf2img"]
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.4.0",
+    "opencode-tool-pdf2img": "latest"
+  }
 }
 ```
 
-OpenCode automatically installs plugin dependencies at runtime.
+### Option 2: Global (available in all projects)
+
+Add to `~/.config/opencode/package.json`:
+
+```json
+{
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.4.0",
+    "opencode-tool-pdf2img": "latest"
+  }
+}
+```
+
+OpenCode automatically installs dependencies and sets up the tool.
 
 ## Usage
 
