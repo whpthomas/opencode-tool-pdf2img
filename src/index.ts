@@ -7,14 +7,14 @@ import * as pdfjsLib from 'pdfjs-dist'
 // Configure pdf.js to suppress JBIG2 warnings
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.mjs'
 
-// Suppress JBIG2 warnings by overriding console.warn
+// Suppress JBIG2 and wasmUrl warnings by overriding console.warn
 const originalWarn = console.warn
 let warnSuppressed = false
 const suppressJBIG2Warnings = () => {
   if (warnSuppressed) return
   warnSuppressed = true
   console.warn = (...args: any[]) => {
-    if (args[0] && typeof args[0] === 'string' && args[0].includes('JBIG2')) {
+    if (args[0] && typeof args[0] === 'string' && (args[0].includes('JBIG2') || args[0].includes('wasmUrl'))) {
       return
     }
     originalWarn.apply(console, args)
