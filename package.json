@@ -1,6 +1,6 @@
 {
   "name": "opencode-tool-pdf2img",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "PDF to image conversion tool for OpenCode",
   "type": "module",
   "main": "./dist/index.js",

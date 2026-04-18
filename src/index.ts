@@ -2,6 +2,24 @@ import { type Plugin, tool } from "@opencode-ai/plugin"
 import { pdf } from 'pdf-to-img'
 import fs from 'fs/promises'
 import path from 'path'
+import * as pdfjsLib from 'pdfjs-dist'
+
+// Configure pdf.js to suppress JBIG2 warnings
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.mjs'
+
+// Suppress JBIG2 warnings by overriding console.warn
+const originalWarn = console.warn
+let warnSuppressed = false
+const suppressJBIG2Warnings = () => {
+  if (warnSuppressed) return
+  warnSuppressed = true
+  console.warn = (...args: any[]) => {
+    if (args[0] && typeof args[0] === 'string' && args[0].includes('JBIG2')) {
+      return
+    }
+    originalWarn.apply(console, args)
+  }
+}
 
 export async function convertPdfToImages(
   pdfPath: string,
@@ -32,13 +50,18 @@ export async function convertPdfToImages(
     throw new Error(`PDF file not found: ${absolutePdfPath}`)
   }
 
+  // Suppress JBIG2 warnings before loading PDF
+  suppressJBIG2Warnings()
+
   let doc
 
   try {
     doc = await pdf(absolutePdfPath, {
       scale,
       docInitParams: {
-        isEvalSupported: false
+        isEvalSupported: false,
+        cMapUrl: 'https://unpkg.com/pdfjs-dist/cmaps/',
+        cMapPacked: true,
       }
     })
   } catch (err) {
