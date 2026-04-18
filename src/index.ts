@@ -76,7 +76,7 @@ export async function convertPdfToImages(
   return manifestContent
 }
 
-export const Pdf2imgPlugin: Plugin = async (_ctx) => {
+export const plugin: Plugin = async (_ctx) => {
   return {
     tool: {
       pdf2img: tool({
@@ -97,3 +97,5 @@ export const Pdf2imgPlugin: Plugin = async (_ctx) => {
     },
   };
 };
+
+export { plugin as default };
