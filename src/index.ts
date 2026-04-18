@@ -1,5 +1,4 @@
-import { type PluginInput } from '@opencode-ai/plugin'
-import { tool } from '@opencode-ai/plugin'
+import { type Plugin, type PluginInput, tool } from '@opencode-ai/plugin'
 import { pdf } from 'pdf-to-img'
 import * as fs from 'fs/promises'
 import * as path from 'path'
@@ -77,21 +76,7 @@ export async function convertPdfToImages(
   return manifestContent
 }
 
-export default async function (_ctx: PluginInput): Promise<{
-  tool: {
-    pdf2img: {
-      description: string
-      args: {
-        pdfPath: import('zod').ZodString
-        scale: import('zod').ZodDefault<import('zod').ZodOptional<import('zod').ZodNumber>>
-      }
-      execute(args: {
-        pdfPath: string
-        scale?: number
-      }, context: import('@opencode-ai/plugin').ToolContext): Promise<string>
-    }
-  }
-}> {
+export const opencodeToolPdf2img: Plugin = async (_ctx: PluginInput) => {
   return {
     tool: {
       pdf2img: tool({
