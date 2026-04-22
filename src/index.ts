@@ -1,4 +1,5 @@
 import { type Plugin, tool } from "@opencode-ai/plugin"
+import { clearLog, log } from './logger.js';
 import { pdf } from 'pdf-to-img'
 import fs from 'fs/promises'
 import path from 'path'
@@ -7,14 +8,12 @@ import * as pdfjsLib from 'pdfjs-dist'
 // Configure pdf.js to suppress JBIG2 warnings
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.mjs'
 
-// Suppress JBIG2 and wasmUrl warnings by overriding console.warn
+// Suppress and wasmUrl warnings by overriding console.warn
 const originalWarn = console.warn
-let warnSuppressed = false
-const suppressJBIG2Warnings = () => {
-  if (warnSuppressed) return
-  warnSuppressed = true
+const suppressWarnings = () => {
   console.warn = (...args: any[]) => {
-    if (args[0] && typeof args[0] === 'string' && (args[0].includes('JBIG2') || args[0].includes('wasmUrl'))) {
+    if (args[0] && typeof args[0] === 'string') {
+      log(args[0])
       return
     }
     originalWarn.apply(console, args)
@@ -50,8 +49,8 @@ export async function convertPdfToImages(
     throw new Error(`PDF file not found: ${absolutePdfPath}`)
   }
 
-  // Suppress JBIG2 warnings before loading PDF
-  suppressJBIG2Warnings()
+  // Suppress warnings before loading PDF
+  suppressWarnings()
 
   let doc
 
@@ -89,7 +88,8 @@ export async function convertPdfToImages(
 
   const manifestLines = files.map(f => `- [ ] ${f}`)
   manifestLines.push('')
-  manifestLines.push(`Converted ${totalPages} pages to ${pdfDir}/`)
+
+  log(`Converted ${totalPages} pages to ${pdfDir}/`)
 
   const manifestContent = manifestLines.join('\n')
 
@@ -100,6 +100,9 @@ export async function convertPdfToImages(
 }
 
 export const plugin: Plugin = async (_ctx) => {
+  clearLog();
+  log('=== pdf2img Plugin Initialized ===');
+
   return {
     tool: {
       pdf2img: tool({
