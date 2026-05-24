@@ -22,7 +22,7 @@ const suppressWarnings = () => {
 
 export async function convertPdfToImages(
   pdfPath: string,
-  outputDir: string,
+  baseOutputDir: string,
   scale: number = 4.0
 ): Promise<string> {
   if (!pdfPath || typeof pdfPath !== 'string' || pdfPath.trim() === '') {
@@ -33,7 +33,7 @@ export async function convertPdfToImages(
     return 'Error: Invalid PDF path contains null character. Please provide a valid file path.'
   }
 
-  const absoluteOutputDir = path.resolve(outputDir)
+  const absoluteOutputDir = path.resolve(baseOutputDir)
   const absolutePdfPath = path.resolve(absoluteOutputDir, pdfPath)
 
   const normalizedInputPath = path.normalize(absolutePdfPath)
@@ -72,31 +72,23 @@ export async function convertPdfToImages(
   }
 
   const pdfDir = path.dirname(absolutePdfPath)
+  const outputDir = path.join(pdfDir, 'pdf2img')
 
-  await fs.mkdir(pdfDir, { recursive: true })
+  await fs.mkdir(outputDir, { recursive: true })
 
   const totalPages = doc.length
-  const files: string[] = []
+  let pageNum = 0
 
   for await (const pageBuffer of doc) {
-    const pageNum = files.length + 1
+    pageNum++
     const filename = `page-${pageNum}.png`
-    const filePath = path.join(pdfDir, filename)
+    const filePath = path.join(outputDir, filename)
     await fs.writeFile(filePath, pageBuffer)
-    files.push(filename)
   }
 
-  const manifestLines = files.map(f => `- [ ] ${f}`)
-  manifestLines.push('')
+  log(`Converted ${totalPages} pages to ${outputDir}/`)
 
-  log(`Converted ${totalPages} pages to ${pdfDir}/`)
-
-  const manifestContent = manifestLines.join('\n')
-
-  const manifestPath = path.join(pdfDir, 'manifest.txt')
-  await fs.writeFile(manifestPath, manifestContent)
-
-  return manifestContent
+  return `Successfully converted ${totalPages} pages to ${outputDir}/`
 }
 
 export const plugin: Plugin = async (_ctx) => {
@@ -107,7 +99,7 @@ export const plugin: Plugin = async (_ctx) => {
     tool: {
       pdf2img: tool({
         description:
-          'Convert a PDF file into PNG images (one image per page). Creates PNG images named page-1.png, page-2.png, etc. in the same directory as the PDF file. Also generates a manifest.txt file with a checklist of all generated pages for workflow tracking.',
+          'Convert a PDF file into PNG images (one image per page). Creates PNG images named page-1.png, page-2.png, etc. in a subdirectory named pdf2img within the PDF file\'s directory.',
         args: {
           pdfPath: tool.schema.string().describe('Path to the PDF file (absolute or relative to current directory)'),
           scale: tool.schema.number().optional().default(4.0).describe('Rendering scale factor (default: 4.0, approximately 288 DPI)'),

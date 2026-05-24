@@ -1,6 +1,6 @@
 # opencode-tool-pdf2img
 
-Custom tool for OpenCode that converts PDF files into images (one image per page) for multi-modal models.
+Custom tool for OpenCode that converts PDF files into images (one image per page) for multi-modal models. Updated to work with new [Orca2](https://www.npmjs.com/package/opencode-plugin-orca2) file structure.
 
 ## Installation
 
@@ -43,8 +43,7 @@ Use the pdf2img tool to convert a PDF file into PNG images.
 
 ## Output
 
-- Creates `page-1.png`, `page-2.png`, etc. in the same directory as the source PDF
-- Generates a `manifest.txt` file with a checklist of all generated pages
+- Creates `page-1.png`, `page-2.png`, etc. in the `pdr2img` sub-directory below the source PDF
 
 ## Development
 
