@@ -43,7 +43,7 @@ Use the pdf2img tool to convert a PDF file into PNG images.
 
 ## Output
 
-- Creates `page-1.png`, `page-2.png`, etc. in the `pdr2img` sub-directory below the source PDF
+- Creates `page-1.png`, `page-2.png`, etc. in the `pdf2img` sub-directory below the source PDF
 
 ## Development
 

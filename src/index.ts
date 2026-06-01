@@ -6,7 +6,7 @@ import path from 'path'
 import * as pdfjsLib from 'pdfjs-dist'
 
 // Configure pdf.js to suppress JBIG2 warnings
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.mjs'
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs'
 
 // Suppress and wasmUrl warnings by overriding console.warn
 const originalWarn = console.warn
